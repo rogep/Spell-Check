@@ -1,7 +1,7 @@
 import argparse
 import ast
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 
 @dataclass
@@ -9,19 +9,28 @@ class NameIdentifier:
     identifier: str
     line_number: int
     file: str
-    type: str
+    identifier_type: str
     full_identifier: str
+
+    def __str__(self) -> str:
+        return f"{self.identifier},{self.line_number},{self.file},{self.identifier_type},{self.full_identifier}"
 
 
 class FileTypeAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: str,
+        values: str,
+        # option_string: str | None = None,
+    ) -> None:
         file_name = values
         if len(file_name.split(".")) != 2 or file_name.split(".")[-1] != "py":
             raise argparse.ArgumentTypeError("File needs to be a Python file (.py)")
         setattr(namespace, self.dest, file_name)
 
 
-def split_pascal_case(text: str) -> str:
+def split_pascal_case(text: str) -> list[str]:
     tokens = re.findall(r"[A-Z][a-z]*|[a-z]+", text)
     return tokens
 
@@ -90,10 +99,7 @@ def main() -> int:
 
     # TODO: think about having a flag for -a, -w, -s (sysout)
     for id in identifiers:
-        print(
-            f"{id.identifier},{id.line_number},{id.file},{id.type},{id.full_identifier}"
-        )
-
+        print(str(id))
     return 73
 
 
