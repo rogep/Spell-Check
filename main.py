@@ -22,7 +22,7 @@ class FileTypeAction(argparse.Action):
         parser: argparse.ArgumentParser,
         namespace: str,
         values: str,
-        # option_string: str | None = None,
+        option_string: str | None = None,
     ) -> None:
         file_name = values
         if len(file_name.split(".")) != 2 or file_name.split(".")[-1] != "py":
